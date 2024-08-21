@@ -1,0 +1,413 @@
+
+<html><head>
+<title>sageone</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #e6ccff;
+    overflow-x: hidden;
+    height: 100%;
+  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    overflow: visible;
+  }
+  header {
+    text-align: center;
+    padding: 40px 0;
+  }
+  h1 {
+    font-size: 3em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+  }
+  .tagline {
+    font-style: italic;
+    font-size: 1.2em;
+  }
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .album-info {
+    text-align: center;
+    margin: 40px 0;
+  }
+  .album-cover {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    background-image: url('index.jpg');
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(230, 204, 255, 0.5);
+  }
+  .buy-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .buy-button {
+    padding: 10px 20px;
+    background-color: #9933ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color
+  }
+  .buy-button:hover {
+    background-color: #8000ff;
+  }
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .social-icon {
+    font-size: 2em;
+    color:  #9933ff;
+    transition: color 0.3s;
+  }
+  .social-icon:hover {
+    color: #77ff33;
+  }
+  .track-list {
+    background-color: rgba(23, 0, 46, 0.85);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 40px;
+  }
+  .track-list h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .tracks {
+    columns: 2;
+    column-gap: 40px;
+  }
+  .track {
+    margin-bottom: 10px;
+  }
+  #ascii-art {
+      font-size: 0.65vw;
+      line-height: 1;
+      letter-spacing: 0;
+      font-family: 'Courier New', monospace;
+      white-space: pre;
+      text-align: center;
+      color: #8A2BE2;
+      text-shadow: 0 0 5px #9400D3;
+      animation: pulsate 5s infinite alternate;
+      margin: 40px 0;
+  }
+  @keyframes pulsate {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+  }
+  .color-1 { color: #FF00FF; }
+  .color-2 { color: #BA55D3; }
+  .color-3 { color: #9932CC; }
+  .color-4 { color: #8A2BE2; }
+  .color-5 { color: #9400D3; }
+  .color-6 { color: #8B008B; }
+  .color-7 { color: #800080; }
+  .color-8 { color: #4B0082; }
+  .color-9 { color: #483D8B; }
+  .color-10 { color: #6A5ACD; }
+  .color-11 { color: #7B68EE; }
+  .color-12 { color: #9370DB; }
+  .color-13 { color: #8B4513; }
+  .color-14 { color: #D2691E; }
+  .color-15 { color: #CD853F; }
+  .color-16 { color: #DDA0DD; }
+  .color-17 { color: #DA70D6; }
+  .color-18 { color: #FF69B4; }
+  .color-19 { color: #FF1493; }
+  .color-20 { color: #C71585; }
+  .color-21 { color: #DB7093; }
+  .color-22 { color: #FF00FF; }
+  .color-23 { color: #EE82EE; }
+  .color-24 { color: #DA70D6; }
+</style>
+<script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="container">
+  <header>
+    <div id="ascii-art">
+      <span class="color-15">███████ </span><span class="color-7"> █████  </span><span class="color-20"> ██████  </span><span class="color-9">███████     </span><span class="color-23"> ██████  </span><span class="color-14">███    ██ </span><span class="color-5">███████     </span><span class="color-18">███    ███ </span><span class="color-11">██    ██ </span><span class="color-2">███████ </span><span class="color-24">██ </span><span class="color-10"> ██████</span>
+      <span class="color-21">██      </span><span class="color-6">██   ██ </span><span class="color-13">██       </span><span class="color-1">██          </span><span class="color-4">██    ██ </span><span class="color-17">████   ██ </span><span class="color-22">██          </span><span class="color-8">████  ████ </span><span class="color-16">██    ██ </span><span class="color-19">██      </span><span class="color-12">██ </span><span class="color-3">██     </span>
+      <span class="color-18">███████ </span><span class="color-9">███████ </span><span class="color-2">██   ███ </span><span class="color-11">█████       </span><span class="color-13">██    ██ </span><span class="color-4">██ ██  ██ </span><span class="color-6">█████       </span><span class="color-14">██ ████ ██ </span><span class="color-22">██    ██ </span><span class="color-23">███████ </span><span class="color-8">██ </span><span class="color-7">██     </span>
+      <span class="color-10">     ██ </span><span class="color-15">██   ██ </span><span class="color-20">██    ██ </span><span class="color-12">██          </span><span class="color-5">██    ██ </span><span class="color-16">██  ██ ██ </span><span class="color-21">██          </span><span class="color-24">██  ██  ██ </span><span class="color-3">██    ██ </span><span class="color-1">     ██ </span><span class="color-17">██ </span><span class="color-19">██     </span>
+      <span class="color-6">███████ </span><span class="color-11">██   ██ </span><span class="color-12"> ██████  </span><span class="color-22">███████     </span><span class="color-9"> ██████  </span><span class="color-4">██   ████ </span><span class="color-8">███████     </span><span class="color-7">██      ██ </span><span class="color-10"> ██████  </span><span class="color-2">███████ </span><span class="color-14">██ </span><span class="color-5"> ██████</span>
+      <span class="color-3"></span>
+      <span class="color-13"></span>
+      <span class="color-23">   </span><span class="color-21">  ██████ </span><span class="color-19">  ██████  </span><span class="color-17">███    ███</span>
+      <span class="color-18">   </span><span class="color-1"> ██      </span><span class="color-24"> ██    ██ </span><span class="color-20">████  ████</span>
+      <span class="color-16">   </span><span class="color-2"> ██      </span><span class="color-14"> ██    ██ </span><span class="color-15">██ ████ ██</span>
+      <span class="color-7">   </span><span class="color-10"> ██      </span><span class="color-6"> ██    ██ </span><span class="color-12">██  ██  ██</span>
+      <span class="color-5">██ </span><span class="color-9">   ████  </span><span class="color-8">  ██████  </span><span class="color-3">██      ██</span>
+    </div>
+  </header>
+  <div class="video-container">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Qkg3IFweTPc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+  <div class="album-info">
+    <h2></h2>
+    <a href="#">
+      <div class="album-cover"></div>
+    </a>
+    <p></p>
+    <div class="buy-links">
+      <a href="#" class="buy-button">Listen on Spotify</a>
+      <a href="#" class="buy-button">Buy on iTunes</a>
+    </div>
+  </div>
+  <div class="social-links">
+    <a href="https://www.youtube.com/@sageonemusic" class="social-icon" aria-label="YouTube"><i data-feather="youtube"></i></a>
+  </div>
+  <script>
+    feather.replace();
+  </script>
+  <div class="track-list">
+    <h2>one - Track List</h2>
+    <div class="tracks">
+        <div class="track" data-file="00 Lollipop - Lil' Wayne Instrumental (remix).mp3"><a href="00 Lollipop - Lil' Wayne Instrumental (remix).mp3">&#11123;</a> 00 Lollipop - Lil' Wayne Instrumental (remix)</div>
+        <div class="track" data-file="01 Bassface N Gunfingaz.mp3"><a href="01 Bassface N Gunfingaz.mp3">&#11123;</a> 01 Bassface N Gunfingaz</div>
+        <div class="track" data-file="02 Ninth Symphony.mp3"><a href="02 Ninth Symphony.mp3">&#11123;</a> 02 Ninth Symphony</div>
+        <div class="track" data-file="03 Knowledge is Power.mp3"><a href="03 Knowledge is Power.mp3">&#11123;</a> 03 Knowledge is Power</div>
+        <div class="track" data-file="04 BASS Is In the Air Tonight - Phil Collins Instrumental (remix).mp3"><a href="04 BASS Is In the Air Tonight - Phil Collins Instrumental (remix).mp3">&#11123;</a> 04 BASS Is In the Air Tonight - Phil Collins Instrumental (remix)</div>
+        <div class="track" data-file="05 Comfortably Numb - Pink Floyd (sageone remix).mp3"><a href="05 Comfortably Numb - Pink Floyd (sageone remix).mp3">&#11123;</a> 05 Comfortably Numb - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="06 Cloud Nine - Kirsty Hawkshaw (sageone remix).mp3"><a href="06 Cloud Nine - Kirsty Hawkshaw (sageone remix).mp3">&#11123;</a> 06 Cloud Nine - Kirsty Hawkshaw (sageone remix)</div>
+        <div class="track" data-file="07 Gimme Shelter - Rolling Stones (sageone remix).mp3"><a href="07 Gimme Shelter - Rolling Stones (sageone remix).mp3">&#11123;</a> 07 Gimme Shelter - Rolling Stones (sageone remix)</div>
+        <div class="track" data-file="08 soul II soul - Back to Life (sageone remix).mp3"><a href="08 soul II soul - Back to Life (sageone remix).mp3">&#11123;</a> 08 soul II soul - Back to Life (sageone remix)</div>
+        <div class="track" data-file="09 Sub Assault.mp3"><a href="09 Sub Assault.mp3">&#11123;</a> 09 Sub Assault</div>
+        <div class="track" data-file="10 The BIG Dirty.mp3"><a href="10 The BIG Dirty.mp3">&#11123;</a> 10 The BIG Dirty</div>
+        <div class="track" data-file="11 Psycho Realm.mp3"><a href="11 Psycho Realm.mp3">&#11123;</a> 11 Psycho Realm</div>
+        <div class="track" data-file="12 Pigs - Pink Floyd (sageone remix).mp3"><a href="12 Pigs - Pink Floyd (sageone remix).mp3">&#11123;</a> 12 Pigs - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="13 Put it on - Big L (sageone remix).mp3"><a href="13 Put it on - Big L (sageone remix).mp3">&#11123;</a> 13 Put it on - Big L (sageone remix)</div>
+        <div class="track" data-file="14 Put it on.mp3"><a href="14 Put it on.mp3">&#11123;</a> 14 Put it on</div>
+        <div class="track" data-file="15 Another Brick in the Wall p2 - Pink Floyd (sageone remix).mp3"><a href="15 Another Brick in the Wall p2 - Pink Floyd (sageone remix).mp3">&#11123;</a> 15 Another Brick in the Wall p2 - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="16 Bassface & Gunfingaz.mp3"><a href="16 Bassface & Gunfingaz.mp3">&#11123;</a> 16 Bassface & Gunfingaz</div>
+        <div class="track" data-file="17 High Hopes - Pink Floyd (sageone remix).mp3"><a href="17 High Hopes - Pink Floyd (sageone remix).mp3">&#11123;</a> 17 High Hopes - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="18 Careless Whisper - Hannah Fogel & sageone.mp3"><a href="18 Careless Whisper - Hannah Fogel & sageone.mp3">&#11123;</a> 18 Careless Whisper - Hannah Fogel & sageone</div>
+        <div class="track" data-file="19 Careless Whisper - George Michael (sageone remix).mp3"><a href="19 Careless Whisper - George Michael (sageone remix).mp3">&#11123;</a> 19 Careless Whisper - George Michael (sageone remix)</div>
+        <div class="track" data-file="20 Kosheen - Catch (sageone remix).mp3"><a href="20 Kosheen - Catch (sageone remix).mp3">&#11123;</a> 20 Kosheen - Catch (sageone remix)</div>
+        <div class="track" data-file="21 Eminem - Superman (sageone remix).mp3"><a href="21 Eminem - Superman (sageone remix).mp3">&#11123;</a> 21 Eminem - Superman (sageone remix)</div>
+        <div class="track" data-file="22 Doctor WHO Soundtrack (sageone remix).mp3"><a href="22 Doctor WHO Soundtrack (sageone remix).mp3">&#11123;</a> 22 Doctor WHO Soundtrack (sageone remix)</div>
+        <div class="track" data-file="23 Breathe (in the Air) - Pink Floyd (sageone remix).mp3"><a href="23 Breathe (in the Air) - Pink Floyd (sageone remix).mp3">&#11123;</a> 23 Breathe (in the Air) - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="24 Walking on The Moon - Hannah Fogel & sageone.mp3"><a href="24 Walking on The Moon - Hannah Fogel & sageone.mp3">&#11123;</a> 24 Walking on The Moon - Hannah Fogel & sageone</div>
+        <div class="track" data-file="25 Walking on The Moon - The Police (sageone remix).mp3"><a href="25 Walking on The Moon - The Police (sageone remix).mp3">&#11123;</a> 25 Walking on The Moon - The Police (sageone remix)</div>
+        <div class="track" data-file="26 The Most Sadistic - Necro (sageone remix).mp3"><a href="26 The Most Sadistic - Necro (sageone remix).mp3">&#11123;</a> 26 The Most Sadistic - Necro (sageone remix)</div>
+        <div class="track" data-file="27 The Most Sadistic.mp3"><a href="27 The Most Sadistic.mp3">&#11123;</a> 27 The Most Sadistic</div>
+        <div class="track" data-file="28 One Mic - NAS (sageone remix).mp3"><a href="28 One Mic - NAS (sageone remix).mp3">&#11123;</a> 28 One Mic - NAS (sageone remix)</div>
+        <div class="track" data-file="29 One Mic.mp3"><a href="29 One Mic.mp3">&#11123;</a> 29 One Mic</div>
+        <div class="track" data-file="30 Right Now - Akon (sageone remix).mp3"><a href="30 Right Now - Akon (sageone remix).mp3">&#11123;</a> 30 Right Now - Akon (sageone remix)</div>
+        <div class="track" data-file="31 Right Now.mp3"><a href="31 Right Now.mp3">&#11123;</a> 31 Right Now</div>
+        <div class="track" data-file="32 Dream - Popcaan (Evidence & sageone remix).mp3"><a href="32 Dream - Popcaan (Evidence & sageone remix).mp3">&#11123;</a> 32 Dream - Popcaan (Evidence & sageone remix)</div>
+        <div class="track" data-file="33 Shook Ones - Mobb Deep (sageone remix).mp3"><a href="33 Shook Ones - Mobb Deep (sageone remix).mp3">&#11123;</a> 33 Shook Ones - Mobb Deep (sageone remix)</div>
+        <div class="track" data-file="34 Shook Ones.mp3"><a href="34 Shook Ones.mp3">&#11123;</a> 34 Shook Ones</div>
+        <div class="track" data-file="35 Fight For You - Morgan Page (Evidence & sageone remix).mp3"><a href="35 Fight For You - Morgan Page (Evidence & sageone remix).mp3">&#11123;</a> 35 Fight For You - Morgan Page (Evidence & sageone remix)</div>
+        <div class="track" data-file="36 Painted Sky - Seba (sageone remix).mp3"><a href="36 Painted Sky - Seba (sageone remix).mp3">&#11123;</a> 36 Painted Sky - Seba (sageone remix)</div>
+        <div class="track" data-file="37 I Believe - Sarah Dwyer (sageone remix).mp3"><a href="37 I Believe - Sarah Dwyer (sageone remix).mp3">&#11123;</a> 37 I Believe - Sarah Dwyer (sageone remix)</div>
+        <div class="track" data-file="38 Cosmic Gate & Jades - Seize The Day (sageone remix).mp3"><a href="38 Cosmic Gate & Jades - Seize The Day (sageone remix).mp3">&#11123;</a> 38 Cosmic Gate & Jades - Seize The Day (sageone remix)</div>
+        <div class="track" data-file="39 Ready or Not - Fugees (sageone remix).mp3"><a href="39 Ready or Not - Fugees (sageone remix).mp3">&#11123;</a> 39 Ready or Not - Fugees (sageone remix)</div>
+        <div class="track" data-file="40 Comfortably Numb - Pink Floyd (sageone redux).mp3"><a href="40 Comfortably Numb - Pink Floyd (sageone redux).mp3">&#11123;</a> 40 Comfortably Numb - Pink Floyd (sageone redux)</div>
+        <div class="track" data-file="41 Subterranean Funk.mp3"><a href="41 Subterranean Funk.mp3">&#11123;</a> 41 Subterranean Funk</div>
+        <div class="track" data-file="42 Luniz - I Got 5 On It (sageone remix).mp3"><a href="42 Luniz - I Got 5 On It (sageone remix).mp3">&#11123;</a> 42 Luniz - I Got 5 On It (sageone remix)</div>
+        <div class="track" data-file="43 I Got 5 on It.mp3"><a href="43 I Got 5 on It.mp3">&#11123;</a> 43 I Got 5 on It</div>
+        <div class="track" data-file="44 Soul Survivor - Jeezy & Akon (sageone remix).mp3"><a href="44 Soul Survivor - Jeezy & Akon (sageone remix).mp3">&#11123;</a> 44 Soul Survivor - Jeezy & Akon (sageone remix)</div>
+        <div class="track" data-file="45 Soul Survivor (160bpm).mp3"><a href="45 Soul Survivor (160bpm).mp3">&#11123;</a> 45 Soul Survivor (160bpm)</div>
+        <div class="track" data-file="46 Soul Survivor (146bpm).mp3"><a href="46 Soul Survivor (146bpm).mp3">&#11123;</a> 46 Soul Survivor (146bpm)</div>
+        <div class="track" data-file="47 Numb Encore - Linkin Park & Jay-Z (sageone remix).mp3"><a href="47 Numb Encore - Linkin Park & Jay-Z (sageone remix).mp3">&#11123;</a> 47 Numb Encore - Linkin Park & Jay-Z (sageone remix)</div>
+        <div class="track" data-file="48 Numb Encore.mp3"><a href="48 Numb Encore.mp3">&#11123;</a> 48 Numb Encore</div>
+        <div class="track" data-file="49 Fallin' - Alicia Keys (sageone 6-8 remix).mp3"><a href="49 Fallin' - Alicia Keys (sageone 6-8 remix).mp3">&#11123;</a> 49 Fallin' - Alicia Keys (sageone 6-8 remix)</div>
+        <div class="track" data-file="50 Aint Gonna Work - Mello (sageone remix).mp3"><a href="50 Aint Gonna Work - Mello (sageone remix).mp3">&#11123;</a> 50 Aint Gonna Work - Mello (sageone remix)</div>
+        <div class="track" data-file="51 Time - Pink Floyd (sageone remix).mp3"><a href="51 Time - Pink Floyd (sageone remix).mp3">&#11123;</a> 51 Time - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="52 It's Bigger than Hip Hop - Dead Prez (sageone remix).mp3"><a href="52 It's Bigger than Hip Hop - Dead Prez (sageone remix).mp3">&#11123;</a> 52 It's Bigger than Hip Hop - Dead Prez (sageone remix)</div>
+        <div class="track" data-file="53 It's Bigger than Hip Hop.mp3"><a href="53 It's Bigger than Hip Hop.mp3">&#11123;</a> 53 It's Bigger than Hip Hop</div>
+        <div class="track" data-file="54 I would Die for You - Chainside (sageone remix).mp3"><a href="54 I would Die for You - Chainside (sageone remix).mp3">&#11123;</a> 54 I would Die for You - Chainside (sageone remix)</div>
+        <div class="track" data-file="55 Subcultured.mp3"><a href="55 Subcultured.mp3">&#11123;</a> 55 Subcultured</div>
+        <div class="track" data-file="56 Graveyard Shift.mp3"><a href="56 Graveyard Shift.mp3">&#11123;</a> 56 Graveyard Shift</div>
+        <div class="track" data-file="57 Underboss.mp3"><a href="57 Underboss.mp3">&#11123;</a> 57 Underboss</div>
+        <div class="track" data-file="58 Delta~Wave.mp3"><a href="58 Delta~Wave.mp3">&#11123;</a> 58 Delta~Wave</div>
+        <div class="track" data-file="59 Time - Chase & Status, Delilah (sageone remix).mp3"><a href="59 Time - Chase & Status, Delilah (sageone remix).mp3">&#11123;</a> 59 Time - Chase & Status, Delilah (sageone remix)</div>
+        <div class="track" data-file="60 Hey You - Pink Floyd (sageone remix).mp3"><a href="60 Hey You - Pink Floyd (sageone remix).mp3">&#11123;</a> 60 Hey You - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="61 Skyfall - Adele (Sageone Remix).mp3"><a href="61 Skyfall - Adele (Sageone Remix).mp3">&#11123;</a> 61 Skyfall - Adele (Sageone Remix)</div>
+        <div class="track" data-file="62 Cold.mp3"><a href="62 Cold.mp3">&#11123;</a> 62 Cold</div>
+        <div class="track" data-file="63 TDot State of Mind.mp3"><a href="63 TDot State of Mind.mp3">&#11123;</a> 63 TDot State of Mind</div>
+        <div class="track" data-file="64 Forgot about Dre - Dr Dre (sageone remix).mp3"><a href="64 Forgot about Dre - Dr Dre (sageone remix).mp3">&#11123;</a> 64 Forgot about Dre - Dr Dre (sageone remix)</div>
+        <div class="track" data-file="65 Phantom of the Opera (sageone remix).mp3"><a href="65 Phantom of the Opera (sageone remix).mp3">&#11123;</a> 65 Phantom of the Opera (sageone remix)</div>
+        <div class="track" data-file="66 Bambi vs Godzilla.mp3"><a href="66 Bambi vs Godzilla.mp3">&#11123;</a> 66 Bambi vs Godzilla</div>
+        <div class="track" data-file="67 Somebody That I Used to Know - Gotye Kimbra (sageone remix).mp3"><a href="67 Somebody That I Used to Know - Gotye Kimbra (sageone remix).mp3">&#11123;</a> 67 Somebody That I Used to Know - Gotye Kimbra (sageone remix)</div>
+        <div class="track" data-file="68 Organx.mp3"><a href="68 Organx.mp3">&#11123;</a> 68 Organx</div>
+        <div class="track" data-file="69 Frozen - Madonna (sageone remix).mp3"><a href="69 Frozen - Madonna (sageone remix).mp3">&#11123;</a> 69 Frozen - Madonna (sageone remix)</div>
+        <div class="track" data-file="70 Million.mp3"><a href="70 Million.mp3">&#11123;</a> 70 Million</div>
+        <div class="track" data-file="71 All Mine - Trouble & Daughter (sageone remix).mp3"><a href="71 All Mine - Trouble & Daughter (sageone remix).mp3">&#11123;</a> 71 All Mine - Trouble & Daughter (sageone remix)</div>
+        <div class="track" data-file="72 Get Up - Ciara & Chamillionaire (sageone remix).mp3"><a href="72 Get Up - Ciara & Chamillionaire (sageone remix).mp3">&#11123;</a> 72 Get Up - Ciara & Chamillionaire (sageone remix)</div>
+        <div class="track" data-file="73 Fist of the North.mp3"><a href="73 Fist of the North.mp3">&#11123;</a> 73 Fist of the North</div>
+        <div class="track" data-file="74 Glory Box - Portishead (sageone remix).mp3"><a href="74 Glory Box - Portishead (sageone remix).mp3">&#11123;</a> 74 Glory Box - Portishead (sageone remix)</div>
+        <div class="track" data-file="75 Machine - Pink Floyd (sageone remix).mp3"><a href="75 Machine - Pink Floyd (sageone remix).mp3">&#11123;</a> 75 Machine - Pink Floyd (sageone remix)</div>
+        <div class="track" data-file="76 School - Supertramp (sageone remix).mp3"><a href="76 School - Supertramp (sageone remix).mp3">&#11123;</a> 76 School - Supertramp (sageone remix)</div>
+        <div class="track" data-file="77 One O'Clock.mp3"><a href="77 One O'Clock.mp3">&#11123;</a> 77 One O'Clock</div>
+        <div class="track" data-file="78 Rise Up.mp3"><a href="78 Rise Up.mp3">&#11123;</a> 78 Rise Up</div>
+        <div class="track" data-file="79 Rise Up (sageone remix).mp3"><a href="79 Rise Up (sageone remix).mp3">&#11123;</a> 79 Rise Up (sageone remix)</div>
+        <div class="track" data-file="80 Bird Bath.mp3"><a href="80 Bird Bath.mp3">&#11123;</a> 80 Bird Bath</div>
+        <div class="track" data-file="81 Real Recognize Real.mp3"><a href="81 Real Recognize Real.mp3">&#11123;</a> 81 Real Recognize Real</div>
+        <div class="track" data-file="82 Stereotonin.mp3"><a href="82 Stereotonin.mp3">&#11123;</a> 82 Stereotonin</div>
+        <div class="track" data-file="83 The Roof.mp3"><a href="83 The Roof.mp3">&#11123;</a> 83 The Roof</div>
+        <div class="track" data-file="84 The Foundation.mp3"><a href="84 The Foundation.mp3">&#11123;</a> 84 The Foundation</div>
+        <div class="track" data-file="85 No Beef - Afrojack, Steve Aoki, Miss Palmer (sageone remix).mp3"><a href="85 No Beef - Afrojack, Steve Aoki, Miss Palmer (sageone remix).mp3">&#11123;</a> 85 No Beef - Afrojack, Steve Aoki, Miss Palmer (sageone remix)</div>
+        <div class="track" data-file="86 Redrum Was The Case.mp3"><a href="86 Redrum Was The Case.mp3">&#11123;</a> 86 Redrum Was The Case</div>
+        <div class="track" data-file="87 Bullish Pennant.mp3"><a href="87 Bullish Pennant.mp3">&#11123;</a> 87 Bullish Pennant</div>
+        <div class="track" data-file="88 Blue Night Express.mp3"><a href="88 Blue Night Express.mp3">&#11123;</a> 88 Blue Night Express</div>
+        <div class="track" data-file="89 Pretty Lights.mp3"><a href="89 Pretty Lights.mp3">&#11123;</a> 89 Pretty Lights</div>
+    </div>
+  </div>
+</div>
+<audio id="audio-player" controls style="display:none;"></audio>
+<script>
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+let katakana = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲン';
+let latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+let nums = '0123456789';
+let alphabet = katakana + latin + nums;
+let fontSize = 16;
+let columns = canvas.width / fontSize;
+let rainDrops = [];
+for (let x = 0; x < columns; x++) { rainDrops[x] = 1; }
+let baseColor = '#500351';
+let specialColor = '#00FF00';
+let speed = 100;
+let paused = false;
+let fadeSpeed = 0.1;
+let characterCount = 0;
+function draw() {
+    if (paused) return;
+    ctx.fillStyle = `rgba(0, 0, 0, ${fadeSpeed})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < rainDrops.length; i++) {
+        let text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        // Switch color every 88th character
+        if (characterCount % 88 === 0) {
+            ctx.fillStyle = specialColor;
+        } else {
+            ctx.fillStyle = baseColor;
+        }
+        ctx.font = fontSize + 'px monospace';
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+        characterCount++;
+    }
+}
+let interval = setInterval(draw, speed);
+window.addEventListener('resize', () => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    columns = canvas.width / fontSize;
+    rainDrops = [];
+    for (let x = 0; x < columns; x++) { rainDrops[x] = 1; }
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ') {
+        paused = !paused;
+    }
+    if (e.key === 'ArrowUp') {
+        fadeSpeed = Math.min(1, fadeSpeed + 0.05);
+    }
+    if (e.key === 'ArrowDown') {
+        fadeSpeed = Math.max(0.05, fadeSpeed - 0.05);
+    }
+    if (e.key === 'ArrowRight') {
+        speed = Math.max(10, speed - 10);
+        clearInterval(interval);
+        interval = setInterval(draw, speed);
+    }
+    if (e.key === 'ArrowLeft') {
+        speed = Math.min(500, speed + 10);
+        clearInterval(interval);
+        interval = setInterval(draw, speed);
+    }
+});
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const asciiArt = document.getElementById('ascii-art');
+      function changeColors() {
+          const spans = asciiArt.getElementsByTagName('span');
+          for (let span of spans) {
+              const randomColorClass = `color-${Math.floor(Math.random() * 24) + 1}`;
+              span.className = randomColorClass;
+          }
+      }
+      setInterval(changeColors, 3000);
+      asciiArt.addEventListener('mousemove', (e) => {
+          const rect = asciiArt.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          asciiArt.style.textShadow = `
+              ${x / 90}px ${y / 90}px 5px rgba(50,0,50,0.5),
+              ${-x / 90}px ${-y / 90}px 5px rgba(205,0,205,0.5)
+          `;
+      });
+      asciiArt.addEventListener('mouseleave', () => {
+          asciiArt.style.textShadow = '0 0 5px #9400D3';
+      });
+  });
+</script>
+<script>
+  const tracks = document.querySelectorAll('.track');
+  const audioPlayer = document.getElementById('audio-player');
+  tracks.forEach(track => {
+    track.addEventListener('click', () => {
+      const file = track.getAttribute('data-file');
+      audioPlayer.src = file;
+      audioPlayer.style.display = 'block';
+      audioPlayer.play();
+    });
+  });
+</script>
+</body></html>
